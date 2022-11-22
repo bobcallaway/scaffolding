@@ -240,3 +240,18 @@ resource "google_secret_manager_secret_version" "mysql-database" {
   secret_data = google_sql_database.trillian.name
 }
 
+// Service account for accessing SQL backups
+resource "google_service_account" "dbrestore-sa" {
+  account_id   = format("%s-sql-db-restore-sa", var.cluster_name)
+  display_name = "SA with access to SQL backups"
+  project      = var.project_id
+  depends_on   = [google_project_service.service]
+}
+
+// Attach cloudsql viewer permissions to the SA that is used to restore SQL backups
+resource "google_project_iam_member" "dbrestore_sql" {
+  project    = var.project_id
+  role       = "roles/cloudsql.viewer"
+  member     = "serviceAccount:${google_service_account.dbrestore-sa.email}"
+  depends_on = [google_service_account.dbrestore-sa]
+}
