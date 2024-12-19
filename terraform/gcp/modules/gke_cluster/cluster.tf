@@ -113,7 +113,8 @@ resource "google_container_cluster" "cluster" {
       display_name = var.display_name
       cidr_block   = format("%s/32", var.bastion_ip_address)
     }
-    private_endpoint_enforcement_enabled = var.enable_private_endpoint
+    // only can set this at cluster creation time; once VPC peering is enabled it is immutable
+    // private_endpoint_enforcement_enabled = var.enable_private_endpoint
   }
 
   // Configure the cluster to have private nodes and private control plane access only
