@@ -44,9 +44,6 @@ jobs:
           cosign sign-blob \
             -y \
             --bundle=bundle.json \
-            --new-bundle-format=true \
-            --rekor-url http://localhost:3000 \
-            --fulcio-url http://localhost:5555 \
             --identity-token ${STEPS_SETUP_SIGSTORE_ENV_OUTPUTS_OIDC_TOKEN} \
             artifact
 
@@ -55,7 +52,6 @@ jobs:
           cosign verify-blob \
             --trusted-root ${STEPS_SETUP_SIGSTORE_ENV_OUTPUTS_TRUSTED_ROOT} \
             --bundle bundle.json \
-            --new-bundle-format=true \
             --certificate-identity foo@bar.com \
             --certificate-oidc-issuer ${STEPS_SETUP_SIGSTORE_ENV_OUTPUTS_ISSUER_URL} \
             artifact
